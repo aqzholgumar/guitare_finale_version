@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Гитарный круг — Ритм вместе</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --linen: #F1F2EB;
+      --grey: #D8DAD3;
+      --teal: #A4C2A5;
+      --ebony: #566246;
+      --charcoal: #4A4A48;
+
+      --bg: var(--linen);
+      --card: #ffffff;
+      --text: var(--charcoal);
+      --heading: var(--ebony);
+      --accent: var(--teal);
+      --border: var(--grey);
+
+      --shadow: 0 10px 30px rgba(74, 74, 72, 0.12);
+    }
+
+    body.dark-theme {
+      --bg: #292B28;
+      --card: #3A3D38;
+      --text: #F1F2EB;
+      --heading: #A4C2A5;
+      --accent: #A4C2A5;
+      --border: #566246;
+
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Roboto Slab", serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition:
+        background 0.4s ease,
+        color 0.4s ease;
+    }
+
+    /* =========================
+       КУРСОР-ГИТАРА
+    ========================= */
+
+    #guitarCursor {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 45px;
+      height: 45px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 32px;
+      pointer-events: none;
+      z-index: 99999;
+
+      transform:
+        translate(-50%, -50%)
+        rotate(-25deg);
+
+      filter: drop-shadow(
+        0 4px 5px rgba(0, 0, 0, 0.25)
+      );
+
+      transition:
+        transform 0.08s ease;
+    }
+
+    #guitarCursor.clicking {
+      transform:
+        translate(-50%, -50%)
+        rotate(-25deg)
+        scale(0.78);
+    }
+
+    @media (pointer: fine) {
+      body {
+        cursor: none;
+      }
+
+      a,
+      button {
+        cursor: none;
+      }
+    }
+
+    @media (pointer: coarse) {
+      #guitarCursor {
+        display: none;
+      }
+    }
+
+    /* =========================
+       КНОПКА ТЕМЫ
+    ========================= */
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+
+      width: 48px;
+      height: 48px;
+
+      border: 1px solid var(--border);
+      border-radius: 50%;
+
+      background: var(--card);
+      color: var(--text);
+
+      font-size: 21px;
+
+      box-shadow: var(--shadow);
+
+      z-index: 10000;
+
+      transition:
+        transform 0.2s ease,
+        background 0.3s ease,
+        color 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.08) rotate(8deg);
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.92);
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 100vh;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 80px 20px;
+
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+
+      position: absolute;
+      width: 420px;
+      height: 420px;
+
+      border-radius: 50%;
+
+      background: var(--teal);
+      opacity: 0.18;
+
+      top: -160px;
+      left: -120px;
+
+      filter: blur(3px);
+    }
+
+    .hero::after {
+      content: "";
+
+      position: absolute;
+      width: 350px;
+      height: 350px;
+
+      border-radius: 50%;
+
+      background: var(--grey);
+      opacity: 0.25;
+
+      right: -100px;
+      bottom: -120px;
+    }
+
+    .hero-content {
+      max-width: 950px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tag {
+      display: inline-block;
+
+      padding: 9px 16px;
+
+      border-radius: 30px;
+
+      background: var(--accent);
+      color: var(--ebony);
+
+      font-size: 13px;
+      font-weight: 800;
+
+      letter-spacing: 1.5px;
+
+      margin-bottom: 25px;
+
+      box-shadow: 0 6px 18px rgba(86, 98, 70, 0.18);
+    }
+
+    h1 {
+      color: var(--heading);
+
+      font-size: clamp(48px, 9vw, 105px);
+      line-height: 0.95;
+
+      letter-spacing: -4px;
+
+      margin-bottom: 28px;
+
+      font-weight: 800;
+    }
+
+    .hero-text {
+      max-width: 700px;
+
+      margin: 0 auto 38px;
+
+      font-size: clamp(17px, 2vw, 21px);
+
+      line-height: 1.7;
+
+      color: var(--text);
+    }
+
+    .hero-button {
+      display: inline-block;
+
+      padding: 15px 27px;
+
+      border-radius: 14px;
+
+      text-decoration: none;
+
+      background: var(--ebony);
+      color: var(--linen);
+
+      font-weight: 700;
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .hero-button:hover {
+      transform: translateY(-4px);
+
+      box-shadow:
+        0 12px 25px rgba(74, 74, 72, 0.25);
+    }
+
+    /* =========================
+       ОСНОВНОЙ КОНТЕНТ
+    ========================= */
+
+    .section {
+      padding: 90px 20px;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+
+      color: var(--heading);
+
+      font-size: clamp(30px, 5vw, 52px);
+
+      margin-bottom: 50px;
+
+      font-weight: 800;
+    }
+
+    /* =========================
+       КАРТОЧКИ
+    ========================= */
+
+    .cards {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+
+      border: 1px solid var(--border);
+
+      border-radius: 24px;
+
+      padding: 30px 23px;
+
+      min-height: 230px;
+
+      box-shadow: var(--shadow);
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-9px) rotate(-1deg);
+
+      box-shadow:
+        0 20px 40px rgba(74, 74, 72, 0.17);
+    }
+
+    .card-icon {
+      font-size: 42px;
+      margin-bottom: 22px;
+    }
+
+    .card h3 {
+      color: var(--heading);
+
+      font-size: 23px;
+
+      margin-bottom: 13px;
+    }
+
+    .card p {
+      line-height: 1.7;
+
+      font-size: 15px;
+
+      color: var(--text);
+      opacity: 0.88;
+    }
+
+    /* =========================
+       АТМОСФЕРА
+    ========================= */
+
+    .atmosphere {
+      padding-bottom: 100px;
+    }
+
+    .photo-box {
+      position: relative;
+
+      min-height: 470px;
+
+      border-radius: 30px;
+
+      overflow: hidden;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--ebony),
+          var(--charcoal)
+        );
+
+      box-shadow: var(--shadow);
+
+      display: flex;
+
+      align-items: flex-end;
+    }
+
+    .photo-box img {
+      position: absolute;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      opacity: 0.78;
+
+      transition:
+        transform 0.6s ease,
+        opacity 0.4s ease;
+    }
+
+    .photo-box:hover img {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .photo-overlay {
+      position: relative;
+
+      z-index: 2;
+
+      width: 100%;
+
+      padding: 45px 35px;
+
+      background:
+        linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.72),
+          transparent
+        );
+
+      color: white;
+    }
+
+    .photo-overlay h3 {
+      font-size: clamp(30px, 5vw, 55px);
+
+      margin-bottom: 8px;
+    }
+
+    .photo-overlay p {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    /* =========================
+       ФУТЕР
+    ========================= */
+
+    footer {
+      border-top: 1px solid var(--border);
+
+      padding: 30px 20px;
+
+      text-align: center;
+
+      color: var(--text);
+
+      background: var(--card);
+
+      transition: background 0.3s ease;
+    }
+
+    footer strong {
+      color: var(--heading);
+    }
+
+    /* =========================
+       ВСПЛЫВАЮЩИЙ АККОРД
+    ========================= */
+
+    .chord-popup {
+      position: fixed;
+
+      pointer-events: none;
+
+      z-index: 99998;
+
+      font-family: "Roboto Slab", serif;
+
+      font-size: 20px;
+      font-weight: 800;
+
+      color: var(--ebony);
+
+      padding: 7px 12px;
+
+      border-radius: 12px;
+
+      background: rgba(241, 242, 235, 0.94);
+
+      border: 1px solid var(--grey);
+
+      box-shadow:
+        0 8px 25px rgba(74, 74, 72, 0.2);
+
+      animation:
+        chordFloat 0.85s ease-out forwards;
+    }
+
+    body.dark-theme .chord-popup {
+      background: rgba(58, 61, 56, 0.96);
+      color: var(--teal);
+      border-color: var(--ebony);
+    }
+
+    @keyframes chordFloat {
+      0% {
+        opacity: 1;
+
+        transform:
+          translate(-50%, 0)
+          scale(1);
+      }
+
+      100% {
+        opacity: 0;
+
+        transform:
+          translate(-50%, -65px)
+          scale(1.15);
+      }
+    }
+
+    /* =========================
+       ПОДСКАЗКА
+    ========================= */
+
+    .music-hint {
+      text-align: center;
+
+      margin-top: 30px;
+
+      color: var(--text);
+
+      opacity: 0.65;
+
+      font-size: 14px;
+    }
+
+    /* =========================
+       АДАПТИВ
+    ========================= */
+
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+
+      h1 {
+        letter-spacing: -2px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        min-height: 90vh;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: auto;
+      }
+
+      .section {
+        padding: 65px 18px;
+      }
+
+      .photo-box {
+        min-height: 350px;
+      }
+
+      .photo-overlay {
+        padding: 30px 23px;
+      }
+
+      .theme-toggle {
+        top: 14px;
+        right: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Курсор-гитара -->
+  <div id="guitarCursor">🎸</div>
+
+  <!-- Переключатель темы -->
+  <button
+    class="theme-toggle"
+    id="themeToggle"
+    aria-label="Переключить тему"
+    title="Переключить тему"
+  >
+    🌙
+  </button>
+
+
+  <!-- =========================
+       HERO
+  ========================= -->
+
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <div class="tag">
+        🎸 ELEGANT GUITAR
+      </div>
+
+      <h1>
+        МЫ ЖДЕМ<br>
+        ТЕБЯ!
+      </h1>
+
+      <p class="hero-text">
+        Место где наконец то осуществишь мечту
+        стать гитаристом в группе или хотя бы
+        научишься играть на гитаре.
+      </p>
+
+      <a href="#about" class="hero-button">
+        Узнать больше
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       КАРТОЧКИ
+  ========================= -->
+
+  <section class="section" id="about">
+
+    <div class="container">
+
+      <h2 class="section-title">
+        НАШ КРУГ
+      </h2>
+
+      <div class="cards">
+
+        <div class="card">
+          <div class="card-icon">🎸</div>
+
+          <h3>Обучение</h3>
+
+          <p>
+            Освоишь базовые аккорды,
+            научишься играть любимые песни
+            и постепенно найдёшь свой стиль.
+          </p>
+        </div>
+
+
+        <div class="card">
+          <div class="card-icon">👥</div>
+
+          <h3>Коллектив</h3>
+
+          <p>
+            Здесь не нужно быть профессионалом.
+            Играем вместе, помогаем друг другу
+            и развиваемся как команда.
+          </p>
+        </div>
+
+
+        <div class="card">
+          <div class="card-icon">🎤</div>
+
+          <h3>Мини-концерты</h3>
+
+          <p>
+            Иногда превращаем обычную встречу
+            в маленький концерт и просто
+            играем то, что нравится.
+          </p>
+        </div>
+
+
+        <div class="card">
+          <div class="card-icon">🔥</div>
+
+          <h3>Атмосфера</h3>
+
+          <p>
+            Гитара, музыка, друзья и тот самый
+            момент, когда несколько аккордов
+            превращаются в настоящую песню.
+          </p>
+        </div>
+
+      </div>
+
+      <p class="music-hint">
+        🎵 Нажми в любом месте сайта — зазвучит следующий аккорд
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       ФОТО
+  ========================= -->
+
+  <section class="section atmosphere">
+
+    <div class="container">
+
+      <h2 class="section-title">
+        РЕАЛЬНАЯ АТМОСФЕРА МУЗЫКИ
+      </h2>
+
+      <div class="photo-box">
+
+        <img
+          src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=85"
+          alt="Музыкальная атмосфера"
+        >
+
+        <div class="photo-overlay">
+
+          <h3>
+            Play it loud.
+          </h3>
+
+          <p>
+            Просто кайфуй.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       ДОПОЛНИТЕЛЬНОЕ ФОТО
+  ========================= -->
+
+  <section class="section atmosphere">
+    <div class="container">
+      <h2 class="section-title">
+        МУЗЫКА ОБЪЕДИНЯЕТ
+      </h2>
+
+      <div class="photo-box">
+        <img
+          src="https://images.unsplash.com/photo-1598277050280-e80ed3e8bfd0?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Гитарист на музыкальном выступлении"
+          loading="lazy"
+        >
+
+        <div class="photo-overlay">
+          <h3>МУЗЫКА ОБЪЕДИНЯЕТ</h3>
+          <p>Почувствуй ритм. Играй вместе с нами.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+    🎸 <strong>Гитарный круг</strong> · Играем вместе
+  </footer>
+
+
+  <script>
+
+    /* ==========================================
+       КУРСОР-ГИТАРА
+    ========================================== */
+
+    const guitarCursor =
+      document.getElementById("guitarCursor");
+
+    document.addEventListener("mousemove", (event) => {
+
+      guitarCursor.style.left =
+        event.clientX + "px";
+
+      guitarCursor.style.top =
+        event.clientY + "px";
+
+    });
+
+    document.addEventListener("mousedown", () => {
+      guitarCursor.classList.add("clicking");
+    });
+
+    document.addEventListener("mouseup", () => {
+      guitarCursor.classList.remove("clicking");
+    });
+
+
+    /* ==========================================
+       ТЕМА
+    ========================================== */
+
+    const themeToggle =
+      document.getElementById("themeToggle");
+
+    const body =
+      document.body;
+
+    themeToggle.addEventListener("click", () => {
+
+      body.classList.toggle("dark-theme");
+
+      if (body.classList.contains("dark-theme")) {
+
+        themeToggle.textContent = "☀️";
+
+      } else {
+
+        themeToggle.textContent = "🌙";
+
+      }
+
+    });
+
+
+    /* ==========================================
+       АККОРДЫ «ЛЮБОВЬ HD1080»
+    ========================================== */
+
+    let audioContext = null;
+
+    let chordIndex = 0;
+
+
+    /*
+      Частоты нот
+    */
+
+    const frequencies = {
+
+      B3: 246.94,
+
+      C4: 261.63,
+      CSharp4: 277.18,
+
+      D4: 293.66,
+      DSharp4: 311.13,
+
+      F4: 349.23,
+      FSharp4: 369.99,
+
+      G4: 392.00,
+      GSharp4: 415.30,
+
+      A4: 440.00,
+      ASharp4: 466.16,
+
+      B4: 493.88,
+
+      C5: 523.25,
+      CSharp5: 554.37,
+
+      D5: 587.33,
+      DSharp5: 622.25,
+
+      F5: 698.46,
+      FSharp5: 739.99,
+
+      G5: 783.99,
+      GSharp5: 830.61
+    };
+
+
+    /*
+      Упрощённая последовательность
+      аккордов «Любовь HD1080»
+    */
+
+    const chords = [
+
+      {
+        name: "B",
+        notes: [
+          "B3",
+          "DSharp4",
+          "FSharp4"
+        ]
+      },
+
+      {
+        name: "C#",
+        notes: [
+          "CSharp4",
+          "F4",
+          "GSharp4"
+        ]
+      },
+
+      {
+        name: "A#",
+        notes: [
+          "ASharp4",
+          "DSharp5",
+          "F5"
+        ]
+      },
+
+      {
+        name: "G#m",
+        notes: [
+          "GSharp4",
+          "B4",
+          "DSharp5"
+        ]
+      },
+
+      {
+        name: "A#m7",
+        notes: [
+          "ASharp4",
+          "CSharp5",
+          "F5",
+          "GSharp5"
+        ]
+      }
+
+    ];
+
+
+    /* ==========================================
+       СОЗДАНИЕ AUDIO CONTEXT
+    ========================================== */
+
+    function getAudioContext() {
+
+      if (!audioContext) {
+
+        audioContext =
+          new (
+            window.AudioContext ||
+            window.webkitAudioContext
+          )();
+
+      }
+
+      if (
+        audioContext.state === "suspended"
+      ) {
+
+        audioContext.resume();
+
+      }
+
+      return audioContext;
+    }
+
+
+    /* ==========================================
+       ПРОИГРАТЬ АККОРД
+    ========================================== */
+
+    function playChord() {
+
+      const context =
+        getAudioContext();
+
+      const chord =
+        chords[chordIndex];
+
+      chordIndex++;
+
+      if (
+        chordIndex >= chords.length
+      ) {
+
+        chordIndex = 0;
+
+      }
+
+
+      const now =
+        context.currentTime;
+
+
+      chord.notes.forEach(
+        (noteName, index) => {
+
+          const oscillator =
+            context.createOscillator();
+
+          const gain =
+            context.createGain();
+
+
+          oscillator.type =
+            "triangle";
+
+
+          oscillator.frequency.value =
+            frequencies[noteName];
+
+
+          /*
+            Небольшая задержка между струнами,
+            чтобы аккорд звучал более похоже
+            на перебор/удар по гитаре.
+          */
+
+          const startTime =
+            now + index * 0.035;
+
+
+          gain.gain.setValueAtTime(
+            0.0001,
+            startTime
+          );
+
+          gain.gain.exponentialRampToValueAtTime(
+            0.16,
+            startTime + 0.025
+          );
+
+          gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            startTime + 1.15
+          );
+
+
+          oscillator.connect(gain);
+
+          gain.connect(
+            context.destination
+          );
+
+
+          oscillator.start(
+            startTime
+          );
+
+          oscillator.stop(
+            startTime + 1.2
+          );
+
+        }
+      );
+
+
+      return chord.name;
+    }
+
+
+    /* ==========================================
+       ПОКАЗ НАЗВАНИЯ АККОРДА
+    ========================================== */
+
+    function showChord(
+      chordName,
+      x,
+      y
+    ) {
+
+      const popup =
+        document.createElement("div");
+
+      popup.className =
+        "chord-popup";
+
+      popup.textContent =
+        chordName;
+
+
+      popup.style.left =
+        x + "px";
+
+      popup.style.top =
+        y + "px";
+
+
+      document.body.appendChild(
+        popup
+      );
+
+
+      setTimeout(() => {
+
+        popup.remove();
+
+      }, 850);
+
+    }
+
+
+    /* ==========================================
+       КЛИК ПО САЙТУ
+    ========================================== */
+
+    document.addEventListener(
+      "click",
+      (event) => {
+
+        /*
+          Кнопка темы не должна
+          запускать аккорд.
+        */
+
+        if (
+          event.target.closest(
+            ".theme-toggle"
+          )
+        ) {
+          return;
+        }
+
+
+        const chordName =
+          playChord();
+
+
+        showChord(
+          chordName,
+          event.clientX,
+          event.clientY
+        );
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
